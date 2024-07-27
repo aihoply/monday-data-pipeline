@@ -5,7 +5,7 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
-from ..db.conect_mongo import monday_db  # Assuming monday_db is correctly initialized as a MongoDB database
+from db.conect_mongo import monday_db  # Assuming monday_db is correctly initialized as a MongoDB database
 from query_monday.items import get_all_items
 from tools.string import remove_leading_number
 from proxy.raw_data import cleaning
@@ -48,7 +48,7 @@ async def rereate_monday_database():
 
     for board in all_boards:
         board = remove_leading_number(board)
-        monday_db.drop_collection(all_boards)
+        monday_db.drop_collection(board)
 
     # Create a ThreadPoolExecutor
     with ThreadPoolExecutor() as executor:

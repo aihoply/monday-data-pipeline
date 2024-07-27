@@ -25,16 +25,17 @@ def cleaning(item_object):
             key = clean_field_name(column['column']['title'])
             
             # Determine the value to use based on the type of the column
-            if column['type'] in ['text', 'long_text', 'email', 'phone', 'link']:
+            if column['type'] in ['text', 'long_text', 'email', 'phone', 'link', "time_tracking", "people"]:
                 value = column['text'] if column['text'] not in [None, 'null', ''] else ""
 
             elif column['type'] in ['date', 'timeline']:
                 value = column.get('date', '')
 
-            elif column['type'] == 'people':
-                # Assuming the people data needs to be simplified to names or IDs
-                people = json.loads(column['value'])['personsAndTeams'] if column['value'] else []
-                value = ', '.join([str(person['id']) for person in people])
+            # elif column['type'] == 'people':
+            #     # Assuming the people data needs to be simplified to names or IDs
+            #     # people = json.loads(column['value'])['personsAndTeams'] if column['value'] else []
+            #     # value = ', '.join([str(person['id']) for person in people])
+            #     value = column['text']
 
             elif column['type'] == 'dropdown':
                 value = column['text'] if column['text'] not in [None, 'null', ''] else ""

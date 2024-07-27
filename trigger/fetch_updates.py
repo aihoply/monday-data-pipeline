@@ -69,3 +69,5 @@ async def fetch_all_updates():
 
     print("All updates have been processed and stored.")
 
+
+asyncio.run(fetch_all_updates())
