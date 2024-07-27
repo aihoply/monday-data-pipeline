@@ -1,0 +1,3 @@
+from trigger.create_database import rereate_monday_database
+
+rereate_monday_database()
