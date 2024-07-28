@@ -4,6 +4,7 @@ import sys
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 from query_monday.items import get_item
+from query_monday.boards import get_name
 from proxy.raw_data import cleaning
 from tools.json import print_json
 from tools.string import remove_leading_number
@@ -46,19 +47,17 @@ async def get_item_and_yeet_to_mongo(item_id):
         print("No changes made to the database.")
 
 
-async def delete_item_in_mongo(item_id):
-    # Retrieve the item metadata to determine the collection it belongs to
-    raw_item = await get_item(item_id)
-    if not raw_item:
-        print("Item not found or unable to retrieve item details.")
-        return
+def delete_item_in_mongo(item_id: int, board_id: int):
 
-    board_name = remove_leading_number(raw_item["board"]["name"])
+    board_name = remove_leading_number(get_name(board_id=board_id))
+    print(board_name)
     collection = monday_db[board_name]
 
     # Delete the item from MongoDB
-    delete_result = collection.delete_one({"id": item_id})
+    delete_result = collection.delete_one({"id": str(item_id)})
     if delete_result.deleted_count:
         print(f"Successfully deleted item with id: {item_id}")
+        return 1
     else:
         print("No item found with the specified ID, nothing was deleted.")
+        return 0

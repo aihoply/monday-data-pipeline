@@ -13,6 +13,7 @@ class Event(BaseModel):
     pulseId: int = None
     destGroupId: int = None
     boardId: int = None
+    itemId: int = None
 
 class WebhookData(BaseModel):
     event: Event
@@ -20,7 +21,10 @@ class WebhookData(BaseModel):
 
 # Define the route for handling webhooks
 @app.post('/webhook')
-async def webhook(data: WebhookData):
+async def webhook(request: Request, data: WebhookData):
+    # Print the entire request body for debugging purposes
+    print("Received webhook request:", await request.json())
+
     # Handle the 'challenge' verification
     if data.challenge:
         return JSONResponse({'challenge': data.challenge}, status_code=status.HTTP_200_OK)
@@ -43,9 +47,10 @@ async def webhook(data: WebhookData):
             await get_item_and_yeet_to_mongo(item_id)
 
     elif event_type == 'delete_pulse':
-        item_id = data.event.pulseId
+        print("delete triggered")
+        item_id = data.event.itemId
         if item_id:
-            await delete_item_in_mongo(item_id)
+            delete_item_in_mongo(item_id=item_id, board_id=data.event.boardId)
             print(f"Deleted item with ID: {item_id}")
 
     # Handle column-related events
